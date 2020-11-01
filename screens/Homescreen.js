@@ -62,7 +62,7 @@ const Homescreen = (props) => {
 
                     </View >
                 ) : <View style={{ flex: 1, width: "100%", height: "100%", }}>
-                        <NavigationEvents onDidFocus={() => updateListAction()} />
+                        {/* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
                         {flag &&
                             <View style={{ flex: 0.4, margin: 5 }}>
                                 <View style={{ flex: 1 }}>
@@ -136,13 +136,13 @@ const Homescreen = (props) => {
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
                             </View>}
 
-                        <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
+                        {/* <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
                             <Icon
                                 name="add"
                                 size={15}
                                 color="white"
                             />
-                        } title="Add new observation" onPress={() => props.navigation.navigate("Add")}></Button>
+                        } title="Add new observation" onPress={() => props.navigation.navigate("Add")}></Button> */}
                     </View>
             }
         </>
