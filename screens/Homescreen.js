@@ -5,6 +5,7 @@ import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase("123.db")
 import MapView, { Marker } from 'react-native-maps'
 import { NavigationEvents } from "react-navigation";
+import {deleteItem,updateList} from '../service/sqliteHelper';
 
 
 
@@ -19,37 +20,17 @@ const Homescreen = (props) => {
     //listOfItems.reverse();
 
     useEffect(() => {
-        updateList();
+        updateListAction();
         setTimeout(() => setBooleanFlag(false), 1000)
     }, []);
 
-    const deleteItem = (id) => {
-        try {
-            db.transaction(
-                tx => {
-                    tx.executeSql('delete from list where id = ?;', [id])
-                },
-                null,
-                updateList
-            )
-        }
-        catch (error) {
-            console.log(error)
-        }
+    const deleteItemAction = (id) => {
+        deleteItem(id,updateListAction);
     }
 
-    const updateList = async () => {
-        try {
-            db.transaction(tx => {
-                tx.executeSql('select* from list;', [], (_, { rows }) =>
-                    setListOfItems(rows._array.reverse())
-                )
-
-            })
-        }
-        catch (error) {
-            console.log(error)
-        }
+    const updateListAction = () => {
+        console.log('updateActionHome')
+        updateList(setListOfItems);
 
     }
 
@@ -64,7 +45,7 @@ const Homescreen = (props) => {
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                 },
-                { text: 'Delete', onPress: () => deleteItem(id) },
+                { text: 'Delete', onPress: () => deleteItemAction(id) },
             ],
             { cancelable: false },
         );
@@ -81,7 +62,7 @@ const Homescreen = (props) => {
 
                     </View >
                 ) : <View style={{ flex: 1, width: "100%", height: "100%", }}>
-                        <NavigationEvents onDidFocus={() => updateList()} />
+                        <NavigationEvents onDidFocus={() => updateListAction()} />
                         {flag &&
                             <View style={{ flex: 0.4, margin: 5 }}>
                                 <View style={{ flex: 1 }}>

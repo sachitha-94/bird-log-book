@@ -5,8 +5,9 @@ import { Input, Button, Icon } from 'react-native-elements';
 import * as Location from 'expo-location';
 import moment from 'moment';
 import * as Permissions from 'expo-permissions';
-import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase("123.db")
+// import * as SQLite from 'expo-sqlite';
+// const db = SQLite.openDatabase("123.db")
+import {createDb,saveItem,updateList} from '../service/sqliteHelper';
 
 
 const AddResult = (props) => {
@@ -28,7 +29,7 @@ const AddResult = (props) => {
         getPermissions();
         getLocation();
         createDb();
-        updateList();
+        updateListAction();
         getLocation();
 
 
@@ -58,46 +59,18 @@ const AddResult = (props) => {
     };
 
 
-    const saveItem = () => {
-        try {
-            db.transaction(tx => {
-                tx.executeSql('insert into list (rarity, notes, speciesname,latitude, longitude, date, image) values (?,?,?,?,?,?,?);',
-                    [rarity, notes, speciesname, latitude, longitude, date, image])
-
-            }, null, updateList
-            )
-        }
-        catch (error) {
-            console.log(error);
-        }
+    const saveItemAction = async() => {
+        const data={rarity, notes, speciesname, latitude, longitude, date, image};
+        await saveItem(data,updateListAction);
+       
         props.navigation.navigate("Home")
-
-
-    }
-
-    createDb = () => {
-        try {
-            db.transaction(tx => {
-                tx.executeSql('create table if not exists list (id integer primary key not null, rarity text, notes text, speciesname text, latitude number, longitude number, date blob, image blob );');
-                //   console.log(tx.executeSql)
-            })
-        }
-        catch (error) {
-            console.log(error)
-        }
+        console.log('save')
 
     }
-    const updateList = () => {
-        try {
-            db.transaction(tx => {
-                tx.executeSql('select* from list;', [], (_, { rows }) =>
-                    setListOfItems(rows._array)
-                )
-            })
-        }
-        catch (error) {
-            console.log(error)
-        }
+
+    const updateListAction = () => {
+        console.log('update')
+        updateList(setListOfItems);
 
     }
 
@@ -122,7 +95,7 @@ const AddResult = (props) => {
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                 },
-                { text: 'Save', onPress: () => saveItem() },
+                { text: 'Save', onPress: () => saveItemAction() },
             ],
             { cancelable: false },
         );
