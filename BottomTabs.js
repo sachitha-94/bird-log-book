@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Homescreen from './screens/Homescreen'
 import Addscreen from './screens/AddScreen'
+import MapScreen from './screens/MapScreen'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -31,6 +32,16 @@ const BottomTabs=()=> {
           tabBarLabel: 'Add Note',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="bell" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          tabBarLabel: 'Add Note',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="map" color={color} size={26} />
           ),
         }}
       />
