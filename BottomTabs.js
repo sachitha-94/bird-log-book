@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Homescreen from './screens/Homescreen'
 import Addscreen from './screens/AddScreen'
 import MapScreen from './screens/MapScreen'
+import Settings from './screens/Settings'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -40,6 +41,16 @@ const BottomTabs=()=> {
         component={MapScreen}
         options={{
           tabBarLabel: 'Add Note',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="map" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="settings"
+        component={Settings}
+        options={{
+          tabBarLabel: 'setting',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="map" color={color} size={26} />
           ),

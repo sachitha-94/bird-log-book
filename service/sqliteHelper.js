@@ -1,11 +1,21 @@
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase("123.db")
 
+import { database } from '../config';
+
+let addItem = item => {
+	database.ref('/items').push({
+		name: item
+	});
+};
+
+
 
 
 export const saveItem = (data,callBack) => {
     console.log('save',data,callBack)
     const {rarity, notes, speciesname, latitude, longitude, date, image}=data;
+    addItem(data);
     try {
         db.transaction(tx => {
             tx.executeSql('insert into list (rarity, notes, speciesname,latitude, longitude, date, image) values (?,?,?,?,?,?,?);',
