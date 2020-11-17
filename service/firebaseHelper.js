@@ -15,12 +15,13 @@ export const saveLogNote = item => {
 
 export const getAllLogNotes = item => {
     try {
-        const logNoteRef = db.ref('/items');
-        const response = logNoteRef.orderByChild('data').on('value', snapshot => {
+        const logNoteRef = database.ref('/logNote');
+        let list = [];
+        logNoteRef.orderByChild('timestamp').on('value', snapshot => {
             let data = snapshot.val();
-            return Object.values(data);
+            list = data ? Object.values(data) : [];
         });
-        return response;
+        return list;
     } catch (error) {
         return error;
     }

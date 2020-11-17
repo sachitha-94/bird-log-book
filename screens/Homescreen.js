@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, Alert, FlatList, StyleSheet, Image } from 'react-native';
+import { ActivityIndicator, View, Text, Alert, FlatList, StyleSheet, Image, ScrollView } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase("123.db")
+import moment from 'moment';
 import MapView, { Marker } from 'react-native-maps'
 import { NavigationEvents } from "react-navigation";
-import {deleteItem,updateList} from '../service/sqliteHelper';
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
+import { deleteItem, updateList } from '../service/sqliteHelper';
+import { getAllLogNotes } from '../service/firebaseHelper';
 
 
 
 
 const Homescreen = (props) => {
+    const [logNotes, setLogNotes] = useState([]);
     const [listOfItems, setListOfItems] = useState([])
     const [booleanFlag, setBooleanFlag] = useState(true)
     const [flag, setFlag] = useState(false);
@@ -18,14 +22,30 @@ const Homescreen = (props) => {
     const [longitude, setLongitude] = useState(24.945831);
 
     //listOfItems.reverse();
+    const { navigation } = props;
 
     useEffect(() => {
+        console.log('first hit---->');
         updateListAction();
         setTimeout(() => setBooleanFlag(false), 1000)
+        getAllLogNotesAction()
     }, []);
 
+    useEffect(() => {
+        console.log(navigation);
+    }, [navigation])
+
+    const getAllLogNotesAction = async () => {
+        const data = await getAllLogNotes();
+        setLogNotes(data);
+        console.log(data);
+    }
+    const refresh = () => {
+        getAllLogNotesAction();
+    }
+
     const deleteItemAction = (id) => {
-        deleteItem(id,updateListAction);
+        deleteItem(id, updateListAction);
     }
 
     const updateListAction = () => {
@@ -54,16 +74,18 @@ const Homescreen = (props) => {
 
     return (
         <>
-            {
+            {/* {
                 booleanFlag ? (
 
                     <View style={[styles.container, styles.horizontal]}>
                         <ActivityIndicator size={60} color="#0000ff" />
 
                     </View >
-                ) : <View style={{ flex: 1, width: "100%", height: "100%", }}>
-                        {/* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
-                        {flag &&
+                ) : */}
+            <View style={{ flex: 1, width: "100%", height: "100%", }}>
+
+                {/* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
+                {/* {flag &&
                             <View style={{ flex: 0.4, margin: 5 }}>
                                 <View style={{ flex: 1 }}>
                                     <MapView
@@ -90,61 +112,72 @@ const Homescreen = (props) => {
                                         title="Close map" onPress={() => setFlag(false)}></Button>
                                 </View>
 
-                            </View>}
-
-                        {listOfItems.length ? (
-                            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                                <FlatList style={{ marginHorizontal: "3%", }}
-                                    keyExtractor={item => item.id.toString()}
-                                    data={listOfItems}
-                                    renderItem={({ item }) => (
-                                        <View style={{ flex: 1, padding: 20, borderBottomColor: "grey", borderBottomWidth: 2 }}>
-                                            <Text><Text style={styles.textBold}>Date: </Text><Text style={styles.text}>{item.date}</Text> </Text>
-                                            <Text><Text style={styles.textBold}>Species name: </Text><Text style={styles.text}>{item.speciesname}</Text> </Text>
-                                            <Text><Text style={styles.textBold}>Rarity: </Text><Text style={styles.text} >{item.rarity}</Text></Text>
-                                            <Text><Text style={styles.textBold}>Notes: </Text><Text style={styles.text} >{item.notes}</Text></Text>
-                                            <Text style={{ paddingBottom: 10 }}><Text style={{ fontSize: 20, fontWeight: "bold" }}>Lat: </Text><Text style={styles.text} >{item.latitude} </Text>
-                                                <Text style={styles.textBold}>Long: </Text><Text style={styles.text} >{item.longitude}</Text>
-                                            </Text>
-
-
-                                            {item.image &&
-                                                <Image style={{ width: "100%", height: 200 }} source={{ uri: `data:image/gif;base64,${item.image}` }} />}
-                                            <View style={{ justifyContent: "space-around", alignItems: "flex-start", paddingTop: 10, flexDirection: "row" }}>
-                                                <Button
-                                                    icon={
-                                                        <Icon
-                                                            name="delete"
-                                                            size={15}
-                                                            color="white"
-                                                        />}
-                                                    title="Delete" onPress={() => alert(item.date, item.speciesname, item.id)}></Button>
-                                                {item.latitude &&
-                                                    <Button
-                                                        icon={
-                                                            <Icon
-                                                                name="lock-open"
-                                                                size={15}
-                                                                color="white"
-                                                            />}
-                                                        title="See on map" onPress={() => { setLatitude(item.latitude), setLongitude(item.longitude), setFlag(true) }}></Button>}
-                                            </View>
-                                        </View>
-                                    )}
+                            </View>} */}
+                <ScrollView>
+                    {logNotes && logNotes.length ? logNotes.map((note) => {
+                        const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
+                        return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                            <Card>
+                                <CardTitle
+                                    title={note.user.email}
+                                    subtitle={relativeTime}
                                 />
-                            </View>) : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
-                                <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
-                            </View>}
+                                <CardImage
+                                    source={{ uri: 'https://picsum.photos/200/300' }}
+                                    title={note.birdName}
+                                />
+                                <CardContent  >
+                                    <Text >Elevation - {note.elevation}</Text>
+                                    <Text >Habitat   - {note.habitat}</Text>
+                                    <Text >Shape     - {note.shape}</Text>
+                                    <Text >Size      - {note.size}</Text>
+                                </CardContent>
+                                <CardAction
+                                    separator={true}
+                                    inColumn={false}>
+                                    <MapView
 
-                        {/* <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
-                            <Icon
-                                name="add"
-                                size={15}
-                                color="white"
-                            />
-                        } title="Add new observation" onPress={() => props.navigation.navigate("Add")}></Button> */}
-                    </View>
-            }
+                                        style={styles.mapView}
+                                        region={{
+                                            latitude: note.location.latitude || 0,
+                                            longitude: note.location.longitude || 0,
+                                            latitudeDelta: 0.0022,
+                                            longitudeDelta: 0.0021
+                                        }}
+
+                                    // onPress={(e) => mapViewOnPress(e.nativeEvent.coordinate)}
+                                    >
+                                        <MapView.Marker coordinate={note.location} />
+
+                                    </MapView>
+                                    {/* <CardButton
+                                        onPress={() => { }}
+                                        title="Push"
+                                        color="blue"
+                                    />
+                                    <CardButton
+                                        onPress={() => { }}
+                                        title="Later"
+                                        color="blue"
+                                    /> */}
+                                </CardAction>
+                            </Card>
+                        </View>)
+
+                    }) : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
+                        </View>}
+
+                    <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
+                        <Icon
+                            name="add"
+                            size={15}
+                            color="white"
+                        />
+                    } title="refresh" onPress={() => refresh()}></Button>
+                </ScrollView>
+            </View>
+            {/* } */}
         </>
     )
 
@@ -168,5 +201,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 10
+    },
+    mapView: {
+        height: 80,
+        padding: 10,
+        borderRadius: 4,
+        flex: 1
     },
 });

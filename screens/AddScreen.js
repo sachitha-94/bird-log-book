@@ -118,7 +118,7 @@ const AddLogNote = (props) => {
     console.log(profile);
     const timestamp = Date.now()
     // const logNoteId = uuid.v1();
-    const logNoteData = { ...data, userId: profile.data.uid, location, timestamp }
+    const logNoteData = { ...data, user: profile.data, location, timestamp }
     console.log('logNoteData ==..>>', logNoteData);
     const res = saveLogNote(logNoteData);
     console.log('saveLogNote ==..>>', res);
