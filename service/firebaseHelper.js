@@ -1,4 +1,4 @@
-import { database, firebaseAuth } from '../config';
+import { database, firebaseAuth,firebaseStorage} from '../config';
 import { setAsyncStorageData } from './asyncStorageHelper';
 import { EMAIL } from '../constants';
 
@@ -97,3 +97,18 @@ export const signOut = async () => {
         // an error
     }
 }
+
+// export const uploadImage=async (imageName,uploadUri)=>{
+//     try {
+//         firebaseStorage.ref(imageName)
+//   .putFile(uploadUri)
+//   .then((snapshot) => {
+//     //You can check the image is now uploaded in the storage bucket
+//     console.log(`${imageName} has been successfully uploaded.`);
+//   })
+//   .catch((e) => console.log('uploading image error => ', e));
+        
+//     } catch (error) {
+        
+//     }
+// }

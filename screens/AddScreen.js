@@ -11,11 +11,14 @@ import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps'
 import Constants from 'expo-constants';
+// import * as Progress from 'react-native-progress';
+// import ImageResizer from 'react-native-image-resizer';
+// import ImagePicker from 'react-native-image-picker';
 // import uuid from 'react-native-uuid';
 import { createDb, saveItem, updateList } from '../service/sqliteHelper';
 import { saveLogNote } from '../service/firebaseHelper';
 import { elevationList, habitatList, sizeList, shapeList } from '../constants/common'
-// import Select from '../components/select';
+// import UploadImage from '../components/UploadImage';
 
 const AddLogNote = (props) => {
   // const [birdName, setBirdName] = useState('');
@@ -54,7 +57,7 @@ const AddLogNote = (props) => {
 
   }, []);
 
-  pickImage = async () => {
+  const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -68,13 +71,34 @@ const AddLogNote = (props) => {
       setImageNormal(result.uri);
       setImage(result.base64)
     }
+
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    
+    // ImagePicker.showImagePicker(options, (response) => {
+    //   console.log('Response = ', response);
+    
+    //   if (response.didCancel) {
+    //     console.log('User cancelled image picker');
+    //   } else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   } else {
+    //     const uri = response.uri;
+    //     setImage(result.uri);
+    //   }
+    // });
   };
 
 
   const saveItemAction = async () => {
     const data = { rarity, notes, speciesname, latitude, longitude, date, image };
     await saveItem(data, updateListAction);
-
+ 
     props.navigation.navigate("Home")
     console.log('save')
 
@@ -113,6 +137,41 @@ const AddLogNote = (props) => {
     );
   }
 
+//   const reSizeImage=(uri)=>{
+//     let newWidth = 40;
+// let newHeight = 40;
+// let compressFormat = 'PNG';
+// let quality = 100;
+// let rotation = 0;
+// let outputPath = null;
+// let imageUri = this.state.selectedPictureUri;
+// ImageResizer.createResizedImage(
+//   imageUri,
+//   newWidth,
+//   newHeight,
+//   compressFormat,
+//   quality,
+//   rotation,
+//   outputPath,
+// )
+//   .then((response) => {
+//     // response.uri is the URI of the new image that can now be displayed, uploaded...
+//     //resized image uri
+//     let uri = response.uri;
+//     //generating image name
+//     let imageName = 'profile' + this.state.userId;
+//     //to resolve file path issue on different platforms
+//     let uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+//     //setting the image name and image uri in the state
+//     this.setState({
+//       uploadUri,
+//       imageName,
+//     });
+//   })
+//   .catch((err) => {
+//     console.log('image resizing error => ', err);
+//   });
+//   }
 
   const onSubmit = data => {
     console.log(profile);
@@ -135,6 +194,11 @@ const AddLogNote = (props) => {
 
   return (
     <View style={styles.container}>
+       <Button title="Pick an image from camera roll" onPress={pickImage} />
+        {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+        {/* {uploading && 
+        <Progress.Bar progress={transferred} width={300} /> 
+        } */}
       <Text style={styles.label}>Bird name</Text>
       <Controller
         control={control}
