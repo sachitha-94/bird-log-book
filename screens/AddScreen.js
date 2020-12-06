@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Input, Icon } from 'react-native-elements';
@@ -195,126 +195,133 @@ const AddLogNote = (props) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="green" barStyle='default' />
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
-      {/* {uploading && 
+      <ScrollView>
+        <TouchableOpacity onPress={pickImage}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Pick an image from camera roll</Text>
+          </View>
+        </TouchableOpacity>
+        {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
+        {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+        {/* {uploading && 
         <Progress.Bar progress={transferred} width={300} /> 
         } */}
-      <Text style={styles.label}>Bird name</Text>
-      <Controller
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={value => onChange(value)}
-            value={value}
-          />
-        )}
-        name="birdName"
-        rules={{ required: true }}
-      />
-      <Text style={styles.label}>Location</Text>
-      <MapView
+        <Text style={styles.label}>Bird name</Text>
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={value => onChange(value)}
+              value={value}
+            />
+          )}
+          name="birdName"
+          rules={{ required: true }}
+        />
+        <Text style={styles.label}>Location</Text>
+        <MapView
 
-        style={styles.mapView}
-        region={{
-          latitude: location.latitude || 0,
-          longitude: location.longitude || 0,
-          latitudeDelta: 0.0322,
-          longitudeDelta: 0.0221
-        }}
-        onPress={(e) => mapViewOnPress(e.nativeEvent.coordinate)}
-      >
-        <MapView.Marker coordinate={location} />
+          style={styles.mapView}
+          region={{
+            latitude: location.latitude || 0,
+            longitude: location.longitude || 0,
+            latitudeDelta: 0.7002,
+            longitudeDelta: 0.7001
+          }}
+          onPress={(e) => mapViewOnPress(e.nativeEvent.coordinate)}
+        >
+          <MapView.Marker coordinate={location} />
 
-      </MapView>
+        </MapView>
 
-      <Text style={styles.label}>Elevation</Text>
-      <Controller
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <DropDownPicker
-            items={elevationList}
-            containerStyle={{ height: 40 }}
-            style={{ backgroundColor: '#fafafa' }}
-            itemStyle={{
-              justifyContent: 'flex-start'
-            }}
-            dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => onChange(
-              item.value
-            )}
-          />
-        )}
-        name="elevation"
-        rules={{ required: true }}
-      />
-      <Text style={styles.label}>Habitat</Text>
-      <Controller
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <DropDownPicker
-            items={habitatList}
-            containerStyle={{ height: 40 }}
-            style={{ backgroundColor: '#fafafa' }}
-            itemStyle={{
-              justifyContent: 'flex-start'
-            }}
-            dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => onChange(
-              item.value
-            )}
-          />
-        )}
-        name="habitat"
-        rules={{ required: true }}
-      />
+        <Text style={styles.label}>Elevation</Text>
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <DropDownPicker
+              items={elevationList}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item => onChange(
+                item.value
+              )}
+            />
+          )}
+          name="elevation"
+          rules={{ required: true }}
+        />
+        <Text style={styles.label}>Habitat</Text>
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <DropDownPicker
+              items={habitatList}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item => onChange(
+                item.value
+              )}
+            />
+          )}
+          name="habitat"
+          rules={{ required: true }}
+        />
 
-      <Text style={styles.label}>Size</Text>
-      <Controller
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <DropDownPicker
-            items={sizeList}
-            containerStyle={{ height: 40 }}
-            style={{ backgroundColor: '#fafafa' }}
-            itemStyle={{
-              justifyContent: 'flex-start'
-            }}
-            dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => onChange(
-              item.value
-            )}
-          />
-        )}
-        name="size"
-        rules={{ required: true }}
-      />
+        <Text style={styles.label}>Size</Text>
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <DropDownPicker
+              items={sizeList}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item => onChange(
+                item.value
+              )}
+            />
+          )}
+          name="size"
+          rules={{ required: true }}
+        />
 
-      <Text style={styles.label}>Shape</Text>
-      <Controller
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <DropDownPicker
-            items={shapeList}
-            containerStyle={{ height: 40 }}
-            style={{ backgroundColor: '#fafafa' }}
-            itemStyle={{
-              justifyContent: 'flex-start'
-            }}
-            dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => onChange(
-              item.value
-            )}
-          />
-        )}
-        name="shape"
-        rules={{ required: true }}
-      />
+        <Text style={styles.label}>Shape</Text>
+        <Controller
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <DropDownPicker
+              items={shapeList}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa', zIndex: 1 }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item => onChange(
+                item.value
+              )}
+            />
+          )}
+          name="shape"
+          rules={{ required: true }}
+        />
+      </ScrollView>
       <TouchableOpacity onPress={handleSubmit(onSubmit)}>
         <View style={styles.button}>
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={styles.buttonText}>Add new Log</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -356,7 +363,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   mapView: {
-    height: 80,
+    height: 100,
     padding: 10,
     borderRadius: 4,
     flex: 1

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, Alert, FlatList, StyleSheet, Image, ScrollView } from 'react-native';
+import { ActivityIndicator, View, Text, Alert, FlatList, StyleSheet, Image, ScrollView, StatusBar } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase("123.db")
@@ -84,7 +84,9 @@ const Homescreen = (props) => {
                 ) : */}
             <View style={{ flex: 1, width: "100%", height: "100%", }}>
 
-                {/* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
+
+                {
+                /* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
                 {/* {flag &&
                             <View style={{ flex: 0.4, margin: 5 }}>
                                 <View style={{ flex: 1 }}>
@@ -97,7 +99,7 @@ const Homescreen = (props) => {
                                             latitudeDelta: 0.0322,
                                             longitudeDelta: 0.0221
                                         }} >
-                                        <Marker
+                             ;l           <Marker
                                             coordinate={{ latitude: latitude, longitude: longitude }}
 
                                         />
@@ -114,6 +116,7 @@ const Homescreen = (props) => {
 
                             </View>} */}
                 <ScrollView>
+                    <StatusBar backgroundColor="green" barStyle='default' />
                     {logNotes && logNotes.length ? logNotes.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
                         return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -141,8 +144,8 @@ const Homescreen = (props) => {
                                         region={{
                                             latitude: note.location.latitude || 0,
                                             longitude: note.location.longitude || 0,
-                                            latitudeDelta: 0.0022,
-                                            longitudeDelta: 0.0021
+                                            latitudeDelta: 0.7002,
+                                            longitudeDelta: 0.7001
                                         }}
 
                                     // onPress={(e) => mapViewOnPress(e.nativeEvent.coordinate)}
