@@ -1,4 +1,4 @@
-# Bird watching Application React Native
+# Bird Log Book React Native
 
 
 ### Application for bird watchers will allow you to save your observations locally to your phone.
