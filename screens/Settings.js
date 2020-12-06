@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, TouchableOpacity, AsyncStorage, Link } from 'react-native';
 import { firebaseAuth } from '../config';
 import { signUp, signIn, getCurrentUserProfile, signOut } from '../service/firebaseHelper';
 import { profileRequest, profileResponse } from '../actions/profileAction';
@@ -71,10 +71,11 @@ const Settings = (props) => {
           <Text style={styles.buttonText}>Log In</Text>
         </View>
       </TouchableOpacity>
-      <Button
-        title="Don't you have an account? Sign Up" color="transparent"
-        onPress={() => setSelectedScreen('SIGNUP')}
-      />
+
+      <TouchableOpacity onPress={() => setSelectedScreen('SIGNUP')}>
+        <Text style={styles.registerText} >Don't you have an account? Sign Up</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={handleSignOutButton}>
         <View style={styles.signupBtn}>
           <Text style={styles.buttonText}>Sign Out</Text>
@@ -111,10 +112,10 @@ const Settings = (props) => {
           <Text style={styles.buttonText}>Create Account</Text>
         </View>
       </TouchableOpacity>
-      <Button
-        title="Do you have an account? Sign In" color="transparent"
-        onPress={() => setSelectedScreen('SIGNIN')}
-      />
+      <TouchableOpacity onPress={() => setSelectedScreen('SIGNIN')}>
+        <Text style={styles.registerText} >Do you have an account? Sign In</Text>
+      </TouchableOpacity>
+
     </>
 
   )
@@ -165,34 +166,43 @@ const styles = StyleSheet.create({
     marginBottom: 35
   },
   heading: {
-    color: '#fff',
+    color: '#006400',
     fontSize: 26,
     marginBottom: 10
   },
   textInput: {
-    height: 40,
+    height: 60,
     width: '90%',
-    borderColor: '#fff',
+    borderColor: '#006400',
     borderWidth: 1,
     marginTop: 8,
-    color: '#fff'
+    fontSize: 25
+    // color: '#fff'
   },
   signupBtn: {
     borderRadius: 5,
     marginBottom: 5,
-    backgroundColor: 'transparent',
+    backgroundColor: '#006400',
     borderWidth: 1,
-    borderColor: '#fff',
-    width: 100,
-    height: 35,
+    // borderColor: '#fff',
+    width: 200,
+    height: 40,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10
+    margin: 20,
+    fontSize: 30
   },
   buttonText: {
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 20
+  },
+  registerText: {
+    backgroundColor: 'transparent',
+    color: '#32CD32',
+    margin: 10,
+    fontSize: 20
   }
 })
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { View, Alert, Image, StyleSheet, Text, TextInput, Button, } from 'react-native';
+import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Input, Icon } from 'react-native-elements';
@@ -11,11 +11,14 @@ import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps'
 import Constants from 'expo-constants';
+// import * as Progress from 'react-native-progress';
+// import ImageResizer from 'react-native-image-resizer';
+// import ImagePicker from 'react-native-image-picker';
 // import uuid from 'react-native-uuid';
 import { createDb, saveItem, updateList } from '../service/sqliteHelper';
 import { saveLogNote } from '../service/firebaseHelper';
 import { elevationList, habitatList, sizeList, shapeList } from '../constants/common'
-// import Select from '../components/select';
+// import UploadImage from '../components/UploadImage';
 
 const AddLogNote = (props) => {
   // const [birdName, setBirdName] = useState('');
@@ -54,7 +57,7 @@ const AddLogNote = (props) => {
 
   }, []);
 
-  pickImage = async () => {
+  const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -68,6 +71,27 @@ const AddLogNote = (props) => {
       setImageNormal(result.uri);
       setImage(result.base64)
     }
+
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    // ImagePicker.showImagePicker(options, (response) => {
+    //   console.log('Response = ', response);
+
+    //   if (response.didCancel) {
+    //     console.log('User cancelled image picker');
+    //   } else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   } else {
+    //     const uri = response.uri;
+    //     setImage(result.uri);
+    //   }
+    // });
   };
 
 
@@ -113,6 +137,41 @@ const AddLogNote = (props) => {
     );
   }
 
+  //   const reSizeImage=(uri)=>{
+  //     let newWidth = 40;
+  // let newHeight = 40;
+  // let compressFormat = 'PNG';
+  // let quality = 100;
+  // let rotation = 0;
+  // let outputPath = null;
+  // let imageUri = this.state.selectedPictureUri;
+  // ImageResizer.createResizedImage(
+  //   imageUri,
+  //   newWidth,
+  //   newHeight,
+  //   compressFormat,
+  //   quality,
+  //   rotation,
+  //   outputPath,
+  // )
+  //   .then((response) => {
+  //     // response.uri is the URI of the new image that can now be displayed, uploaded...
+  //     //resized image uri
+  //     let uri = response.uri;
+  //     //generating image name
+  //     let imageName = 'profile' + this.state.userId;
+  //     //to resolve file path issue on different platforms
+  //     let uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+  //     //setting the image name and image uri in the state
+  //     this.setState({
+  //       uploadUri,
+  //       imageName,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log('image resizing error => ', err);
+  //   });
+  //   }
 
   const onSubmit = data => {
     console.log(profile);
@@ -135,6 +194,12 @@ const AddLogNote = (props) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="green" barStyle='default' />
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+      {/* {uploading && 
+        <Progress.Bar progress={transferred} width={300} /> 
+        } */}
       <Text style={styles.label}>Bird name</Text>
       <Controller
         control={control}
@@ -247,15 +312,11 @@ const AddLogNote = (props) => {
         name="shape"
         rules={{ required: true }}
       />
-
-      <View style={styles.button}>
-        <Button
-          style={styles.buttonInner}
-          color
-          title="Save"
-          onPress={handleSubmit(onSubmit)}
-        />
-      </View>
+      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>Save</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -277,7 +338,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     color: 'white',
     height: 40,
-    backgroundColor: '#ec5990',
+    backgroundColor: '#006400',
     borderRadius: 4,
   },
   container: {
@@ -285,7 +346,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     padding: 8,
-    backgroundColor: '#0e101c',
+    backgroundColor: '#A9DFBF',
   },
   input: {
     backgroundColor: 'white',
@@ -299,5 +360,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 4,
     flex: 1
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20
   },
 });

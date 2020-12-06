@@ -8,7 +8,7 @@ import Settings from './screens/Settings'
 
 const Tab = createMaterialBottomTabNavigator();
 
-const BottomTabs=()=> {
+const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
