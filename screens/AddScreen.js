@@ -11,12 +11,14 @@ import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps'
 import Constants from 'expo-constants';
+// import ImagePicker from 'react-native-image-picker';
+// import RNFetchBlob from 'react-native-fetch-blob'
 // import * as Progress from 'react-native-progress';
 // import ImageResizer from 'react-native-image-resizer';
 // import ImagePicker from 'react-native-image-picker';
 // import uuid from 'react-native-uuid';
 import { createDb, saveItem, updateList } from '../service/sqliteHelper';
-import { saveLogNote } from '../service/firebaseHelper';
+import { saveLogNote, uploadImage } from '../service/firebaseHelper';
 import { elevationList, habitatList, sizeList, shapeList } from '../constants/common'
 // import UploadImage from '../components/UploadImage';
 
@@ -26,14 +28,11 @@ const AddLogNote = (props) => {
     latitude: 0,
     longitude: 0,
   });
-  // const [elevation, setElevation] = useState(elevationList);
-  // const [habitat, setHabitat] = useState(habitatList);
-  // const [size, setSize] = useState(sizeList);
-  // const [shape, setShape] = useState(shapeList);
-  // const [color, setColor] = useState("");
-  // const [notes, setNotes] = useState("");
+
   const [image, setImage] = useState(null);
   const [imageNormal, setImageNormal] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState('');
+
   const date = moment().format('MMMM Do YYYY h:mm a ');
 
   const { register, setValue, handleSubmit, control, reset, errors } = useForm();
@@ -66,10 +65,13 @@ const AddLogNote = (props) => {
       base64: true,
       quality: 0.20
     });
-
+    // console.log('result====>>> 11 ', result);
     if (!result.cancelled) {
+      console.log('result====>>> ', result.uri);
       setImageNormal(result.uri);
       setImage(result.base64)
+      const imageUrl = await uploadImage(result.uri);
+      setUploadedImage(imageUrl);
     }
 
     const options = {
@@ -202,7 +204,7 @@ const AddLogNote = (props) => {
           </View>
         </TouchableOpacity>
         {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
-        {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+        {imageNormal && <Image source={{ uri: imageNormal }} style={styles.imageView} />}
         {/* {uploading && 
         <Progress.Bar progress={transferred} width={300} /> 
         } */}
@@ -364,6 +366,12 @@ const styles = StyleSheet.create({
   },
   mapView: {
     height: 100,
+    padding: 10,
+    borderRadius: 4,
+    flex: 1
+  },
+  imageView: {
+    height: 300,
     padding: 10,
     borderRadius: 4,
     flex: 1

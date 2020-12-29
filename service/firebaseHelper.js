@@ -1,11 +1,10 @@
-import { database, firebaseAuth,firebaseStorage} from '../config';
+import { firebaseDatabase, firebaseAuth, firebaseStorage } from '../config';
 import { setAsyncStorageData } from './asyncStorageHelper';
 import { EMAIL } from '../constants';
-
 export const saveLogNote = item => {
     try {
         console.log('saveLogNote');
-        const response = database.ref('/logNote').push(item);
+        const response = firebaseDatabase.ref('/logNote').push(item);
         return response;
     } catch (error) {
         return error;
@@ -15,7 +14,7 @@ export const saveLogNote = item => {
 
 export const getAllLogNotes = item => {
     try {
-        const logNoteRef = database.ref('/logNote');
+        const logNoteRef = firebaseDatabase.ref('/logNote');
         let list = [];
         logNoteRef.orderByChild('timestamp').on('value', snapshot => {
             let data = snapshot.val();
@@ -98,17 +97,50 @@ export const signOut = async () => {
     }
 }
 
-// export const uploadImage=async (imageName,uploadUri)=>{
+// export const uploadImage = async (uploadUri) => {
 //     try {
-//         firebaseStorage.ref(imageName)
-//   .putFile(uploadUri)
-//   .then((snapshot) => {
-//     //You can check the image is now uploaded in the storage bucket
-//     console.log(`${imageName} has been successfully uploaded.`);
-//   })
-//   .catch((e) => console.log('uploading image error => ', e));
+//         // console.log('uploadImage==>', uploadUri);
+//         const timetamp = Date.now();
+//         const imageName = `${timetamp}.jpg`;
+//         console.log('uploadImage==> imageName===>', imageName);
+//         firebaseStorage.ref(imageName).putFile(uploadUri).then((snapshot) => {
+//             //You can check the image is now uploaded in the storage bucket
+//             console.log(`${imageName} has been successfully uploaded.`);
+//         }).catch((e) => console.log('uploading image error => ', e));
+//         // console.log('uploadImage==> reference===>', reference);        // 2
+//         // let task = reference.putFile(uploadUri);               // 3
+//         // console.log('uploadImage==> task===>', task);
+//         // task.then(() => {                                 // 4
+//         //     console.log('Image uploaded to the bucket!');
+//         // }).catch((e) => console.log('uploading image error => ', e));
         
 //     } catch (error) {
         
 //     }
 // }
+
+
+
+export const uploadImage = async (uri) => {
+
+    const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            resolve(xhr.response);
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+            reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+    });
+    const timetamp = Date.now();
+    const imageName = `${timetamp}.jpg`;
+    const ref = firebaseStorage.ref('images').child(imageName);
+    const snapshot = await ref.put(blob);
+    const downloadUrl = await ref.getDownloadURL();
+    blob.close();
+    return downloadUrl;
+}
