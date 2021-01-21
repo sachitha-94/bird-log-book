@@ -40,7 +40,7 @@ const BottomTabs = () => {
         name="Map"
         component={MapScreen}
         options={{
-          tabBarLabel: 'Add Note',
+          tabBarLabel: 'Map',
           tabBarIcon: ({ color }) => (
             <Feather name="map-pin" size={24} color="black" />
           ),
