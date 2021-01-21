@@ -11,7 +11,7 @@ const Tab = createMaterialBottomTabNavigator();
 const BottomTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="settings"
       activeColor="#e91e63"
       labelStyle={{ fontSize: 12 }}
       style={{ backgroundColor: 'tomato' }}
@@ -50,7 +50,7 @@ const BottomTabs = () => {
         name="settings"
         component={Settings}
         options={{
-          tabBarLabel: 'setting',
+          tabBarLabel: 'settings',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="map" color={color} size={26} />
           ),

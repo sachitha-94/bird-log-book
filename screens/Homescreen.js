@@ -15,12 +15,13 @@ import { getAllLogNotes } from '../service/firebaseHelper';
 
 const Homescreen = (props) => {
     const [logNotes, setLogNotes] = useState([]);
+    const [counter, setCounter] = useState(0);
+
     const [listOfItems, setListOfItems] = useState([])
     const [booleanFlag, setBooleanFlag] = useState(true)
     const [flag, setFlag] = useState(false);
     const [latitude, setLatitude] = useState(60.192059);
     const [longitude, setLongitude] = useState(24.945831);
-
     //listOfItems.reverse();
     const { navigation } = props;
 
@@ -30,6 +31,16 @@ const Homescreen = (props) => {
         setTimeout(() => setBooleanFlag(false), 1000)
         getAllLogNotesAction()
     }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getAllLogNotesAction();
+            setCounter(counter + 1);
+        }, 10000);
+
+        return () => clearInterval(interval)
+
+    }, [counter]);
 
     useEffect(() => {
         console.log(navigation);
@@ -119,14 +130,15 @@ const Homescreen = (props) => {
                     <StatusBar backgroundColor="green" barStyle='default' />
                     {logNotes && logNotes.length ? logNotes.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
-                        return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                        return (
+                        <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                             <Card>
                                 <CardTitle
-                                    title={note.user.email}
+                                    title={note?.user?.email|| note?.user?.name}
                                     subtitle={relativeTime}
                                 />
                                 <CardImage
-                                    source={{ uri: 'https://picsum.photos/200/300' }}
+                                    source={{ uri: note.imagePath }}
                                     title={note.birdName}
                                 />
                                 <CardContent  >

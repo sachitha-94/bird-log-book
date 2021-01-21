@@ -16,9 +16,14 @@ export const getAllLogNotes = item => {
     try {
         const logNoteRef = firebaseDatabase.ref('/logNote');
         let list = [];
-        logNoteRef.orderByChild('timestamp').on('value', snapshot => {
+        logNoteRef.on('value', snapshot => {
             let data = snapshot.val();
-            list = data ? Object.values(data) : [];
+            const list1 = data ? Object.values(data) : [];
+            list = list1.sort((a, b) => {
+                if (a.timestamp < b.timestamp) return 1;
+                if (a.timestamp > b.timestamp) return -1;
+                return 0;
+            });
         });
         return list;
     } catch (error) {

@@ -179,10 +179,11 @@ const AddLogNote = (props) => {
     console.log(profile);
     const timestamp = Date.now()
     // const logNoteId = uuid.v1();
-    const logNoteData = { ...data, user: profile.data, location, timestamp }
-    console.log('logNoteData ==..>>', logNoteData);
+    console.log('logNoteData ==data..>>', data);
+    const logNoteData = { ...data, user: profile.data, location, timestamp, imagePath: uploadedImage }
+    console.log('logNoteData ==logNoteData..>>', logNoteData);
     const res = saveLogNote(logNoteData);
-    console.log('saveLogNote ==..>>', res);
+    console.log('saveLogNote ==res..>>', res);
   };
 
   const onChange = arg => {
@@ -197,7 +198,7 @@ const AddLogNote = (props) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="green" barStyle='default' />
-      <ScrollView>
+      <ScrollView >
         <TouchableOpacity onPress={pickImage}>
           <View style={styles.button}>
             <Text style={styles.buttonText}>Pick an image from camera roll</Text>
@@ -220,7 +221,7 @@ const AddLogNote = (props) => {
             />
           )}
           name="birdName"
-          rules={{ required: true }}
+          // rules={{ required: true }}
         />
         <Text style={styles.label}>Location</Text>
         <MapView
@@ -256,7 +257,7 @@ const AddLogNote = (props) => {
             />
           )}
           name="elevation"
-          rules={{ required: true }}
+          // rules={{ required: true }}
         />
         <Text style={styles.label}>Habitat</Text>
         <Controller
@@ -276,7 +277,7 @@ const AddLogNote = (props) => {
             />
           )}
           name="habitat"
-          rules={{ required: true }}
+          // rules={{ required: true }}
         />
 
         <Text style={styles.label}>Size</Text>
@@ -297,7 +298,7 @@ const AddLogNote = (props) => {
             />
           )}
           name="size"
-          rules={{ required: true }}
+          // rules={{ required: true }}
         />
 
         <Text style={styles.label}>Shape</Text>
@@ -306,26 +307,31 @@ const AddLogNote = (props) => {
           render={({ onChange, onBlur, value }) => (
             <DropDownPicker
               items={shapeList}
-              containerStyle={{ height: 40 }}
-              style={{ backgroundColor: '#fafafa', zIndex: 1 }}
+              containerStyle={{
+                height: 40
+              }}
+              style={{ backgroundColor: '#fafafa' }}
               itemStyle={{
                 justifyContent: 'flex-start'
               }}
-              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              dropDownStyle={{ backgroundColor: '#fafafa', zIndex: 1 }}
               onChangeItem={item => onChange(
                 item.value
               )}
+              // defaultValue=" "
             />
           )}
           name="shape"
-          rules={{ required: true }}
+        // rules={{ required: true }}
         />
+         <Text style={styles.bottom}></Text>
       </ScrollView>
-      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+      {/* <TouchableOpacity onPress={handleSubmit(() => onSubmit())}>
         <View style={styles.button}>
           <Text style={styles.buttonText}>Add new Log</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
@@ -380,5 +386,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontSize: 20
+  },
+  bottom: {
+    margin: 70,
   },
 });
