@@ -128,7 +128,7 @@ const Homescreen = (props) => {
                             </View>} */}
                 <ScrollView>
                     <StatusBar backgroundColor="green" barStyle='default' />
-                    {logNotes && logNotes.length ? logNotes.map((note) => {
+                    {logNotes && logNotes.length && logNotes.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
                         return (
                         <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -179,17 +179,19 @@ const Homescreen = (props) => {
                             </Card>
                         </View>)
 
-                    }) : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
-                        </View>}
+                    }) 
+                    // : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
+                    //         <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
+                    //     </View>
+                        }
 
-                    <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
+                    {/* <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
                         <Icon
                             name="add"
                             size={15}
                             color="white"
                         />
-                    } title="refresh" onPress={() => refresh()}></Button>
+                    } title="refresh" onPress={() => refresh()}></Button> */}
                 </ScrollView>
             </View>
             {/* } */}
