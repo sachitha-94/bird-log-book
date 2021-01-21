@@ -84,51 +84,10 @@ const Homescreen = (props) => {
 
 
     return (
-        <>
-            {/* {
-                booleanFlag ? (
-
-                    <View style={[styles.container, styles.horizontal]}>
-                        <ActivityIndicator size={60} color="#0000ff" />
-
-                    </View >
-                ) : */}
-            <View style={{ flex: 1, width: "100%", height: "100%", }}>
-
-
-                {
-                /* <NavigationEvents onDidFocus={() => updateListAction()} /> */}
-                {/* {flag &&
-                            <View style={{ flex: 0.4, margin: 5 }}>
-                                <View style={{ flex: 1 }}>
-                                    <MapView
-
-                                        style={{ flex: 1 }}
-                                        region={{
-                                            latitude: latitude,
-                                            longitude: longitude,
-                                            latitudeDelta: 0.0322,
-                                            longitudeDelta: 0.0221
-                                        }} >
-                             ;l           <Marker
-                                            coordinate={{ latitude: latitude, longitude: longitude }}
-
-                                        />
-
-                                    </MapView>
-                                    <Button icon={
-                                        <Icon
-                                            name="close"
-                                            size={15}
-                                            color="white"
-                                        />}
-                                        title="Close map" onPress={() => setFlag(false)}></Button>
-                                </View>
-
-                            </View>} */}
+        <View style={{ flex: 1, width: "100%", height: "100%", }}>
                 <ScrollView>
                     <StatusBar backgroundColor="green" barStyle='default' />
-                    {logNotes && logNotes.length && logNotes.map((note) => {
+                {logNotes && logNotes.length ? logNotes.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
                         return (
                         <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -180,22 +139,12 @@ const Homescreen = (props) => {
                         </View>)
 
                     }) 
-                    // : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
-                    //         <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >No content in your list. Click button to add new observation </Text>
-                    //     </View>
-                        }
-
-                    {/* <Button buttonStyle={{ borderRadius: 0, marginTop: 2 }} icon={
-                        <Icon
-                            name="add"
-                            size={15}
-                            color="white"
-                        />
-                    } title="refresh" onPress={() => refresh()}></Button> */}
+                    : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >Loading... </Text>
+                    </View>
+                }
                 </ScrollView>
-            </View>
-            {/* } */}
-        </>
+        </View>
     )
 
 

@@ -9,7 +9,7 @@ const store = configureStore()
 export default function App() {
   return (
     <Provider store = { store }>
-    <NavigationContainer>
+      <NavigationContainer >
       <BottomTabs />
     </NavigationContainer>
     </Provider>

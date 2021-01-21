@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import Homescreen from './screens/Homescreen'
 import Addscreen from './screens/AddScreen'
 import MapScreen from './screens/MapScreen'
@@ -12,9 +12,9 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="settings"
-      activeColor="#e91e63"
+      activeColor="black"
       labelStyle={{ fontSize: 12 }}
-      style={{ backgroundColor: 'tomato' }}
+      barStyle={{ backgroundColor: 'green' }}
     >
       <Tab.Screen
         name="Home"
@@ -22,7 +22,7 @@ const BottomTabs = () => {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <Feather name="home" size={24} color="black" />
           ),
         }}
       />
@@ -32,7 +32,7 @@ const BottomTabs = () => {
         options={{
           tabBarLabel: 'Add Note',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={26} />
+            <AntDesign name="addfile" size={24} color="black" />
           ),
         }}
       />
@@ -42,7 +42,7 @@ const BottomTabs = () => {
         options={{
           tabBarLabel: 'Add Note',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map" color={color} size={26} />
+            <Feather name="map-pin" size={24} color="black" />
           ),
         }}
       />
@@ -52,7 +52,7 @@ const BottomTabs = () => {
         options={{
           tabBarLabel: 'settings',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map" color={color} size={26} />
+            <Feather name="settings" size={24} color="black" />
           ),
         }}
       />
@@ -60,3 +60,4 @@ const BottomTabs = () => {
   );
 }
 export default BottomTabs;
+{/* <Foundation name="clipboard-notes" size={24} color="black" /> */ }
