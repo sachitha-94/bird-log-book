@@ -5,8 +5,12 @@ import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dime
 import { firebaseAuth } from '../config';
 import { signUp, signIn, getCurrentUserProfile, signOut } from '../service/firebaseHelper';
 import { profileRequest, profileResponse } from '../actions/profileAction';
+import { getLogNoteResponse, } from '../actions/logNoteAction';
 import { getAsyncStorageData } from '../service/asyncStorageHelper';
+import { getAllLogNotes } from '../service/firebaseHelper';
 import { EMAIL } from '../constants';
+
+
 const Settings = (props) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,6 +20,12 @@ const Settings = (props) => {
 
   const { navigation, dispatch, profile, profileResponseActions } = props
 
+  const getAllLogNotesAction = async () => {
+    const data = await getAllLogNotes();
+    // setLogNotes(data);
+    getLogNoteResponseActions(data);
+    console.log('logNotes---<<...>>.', data);
+  }
 
   const handleSignUp = () => {
     // TODO: Firebase stuff...
@@ -44,9 +54,10 @@ const Settings = (props) => {
   useEffect(() => {
     const user = getCurrentUserProfile();
     profileResponseActions(user);
+    getAllLogNotesAction();
   }, [])
   useEffect(() => {
-    console.log(profile);
+    console.log("profileeeeeeee==========>>>>>>........", profile);
   }, [profile])
 
   const renderSignInScreen = () => (
@@ -145,6 +156,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   profileRequestActions: bindActionCreators(profileRequest, dispatch),
   profileResponseActions: bindActionCreators(profileResponse, dispatch),
+  getLogNoteResponseActions: bindActionCreators(getLogNoteResponse, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

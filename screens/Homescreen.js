@@ -1,34 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, Alert, FlatList, StyleSheet, Image, ScrollView, StatusBar } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
-import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase("123.db")
+import { View, Text, Alert, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import moment from 'moment';
-import MapView, { Marker } from 'react-native-maps'
-import { NavigationEvents } from "react-navigation";
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
-import { deleteItem, updateList } from '../service/sqliteHelper';
+import MapView from 'react-native-maps'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Card, CardTitle, CardContent, CardAction, CardImage } from 'react-native-material-cards'
 import { getAllLogNotes } from '../service/firebaseHelper';
-
-
-
+import { getLogNoteResponse, } from '../actions/logNoteAction';
 
 const Homescreen = (props) => {
-    const [logNotes, setLogNotes] = useState([]);
+    // const [logNotes, setLogNotes] = useState([]);
     const [counter, setCounter] = useState(0);
-
-    const [listOfItems, setListOfItems] = useState([])
-    const [booleanFlag, setBooleanFlag] = useState(true)
-    const [flag, setFlag] = useState(false);
-    const [latitude, setLatitude] = useState(60.192059);
-    const [longitude, setLongitude] = useState(24.945831);
-    //listOfItems.reverse();
-    const { navigation } = props;
+    const { navigation, logNotes, getLogNoteResponseActions } = props;
 
     useEffect(() => {
-        console.log('first hit---->');
-        updateListAction();
-        setTimeout(() => setBooleanFlag(false), 1000)
         getAllLogNotesAction()
     }, []);
 
@@ -36,58 +21,47 @@ const Homescreen = (props) => {
         const interval = setInterval(() => {
             getAllLogNotesAction();
             setCounter(counter + 1);
-        }, 10000);
+        }, 60000);
 
         return () => clearInterval(interval)
 
     }, [counter]);
 
     useEffect(() => {
-        console.log(navigation);
-    }, [navigation])
+        console.log('logNotes=======>>>>', logNotes);
+
+    }, [logNotes]);
 
     const getAllLogNotesAction = async () => {
         const data = await getAllLogNotes();
-        setLogNotes(data);
-        console.log(data);
-    }
-    const refresh = () => {
-        getAllLogNotesAction();
+        // setLogNotes(data);
+        getLogNoteResponseActions(data);
+        console.log('logNotes---<<...>>.', data);
     }
 
-    const deleteItemAction = (id) => {
-        deleteItem(id, updateListAction);
-    }
+    // const alert = (date, speciesname, id) => {
+    //     Alert.alert(
+    //         'You are about the delete item saved on ' + date,
+    //         'Species name: ' + speciesname,
 
-    const updateListAction = () => {
-        console.log('updateActionHome')
-        updateList(setListOfItems);
-
-    }
-
-    const alert = (date, speciesname, id) => {
-        Alert.alert(
-            'You are about the delete item saved on ' + date,
-            'Species name: ' + speciesname,
-
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                { text: 'Delete', onPress: () => deleteItemAction(id) },
-            ],
-            { cancelable: false },
-        );
-    }
+    //         [
+    //             {
+    //                 text: 'Cancel',
+    //                 onPress: () => console.log('Cancel Pressed'),
+    //                 style: 'cancel',
+    //             },
+    //             { text: 'Delete', onPress: () => deleteItemAction(id) },
+    //         ],
+    //         { cancelable: false },
+    //     );
+    // }
 
 
     return (
         <View style={{ flex: 1, width: "100%", height: "100%", }}>
                 <ScrollView>
                     <StatusBar backgroundColor="green" barStyle='default' />
-                {logNotes && logNotes.length ? logNotes.map((note) => {
+                {logNotes?.data?.length ? logNotes.data.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
                         return (
                         <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -150,7 +124,16 @@ const Homescreen = (props) => {
 
 }
 
-export default Homescreen;
+const mapStateToProps = state => ({
+    logNotes: state.logNotes,
+});
+
+const mapDispatchToProps = dispatch => ({
+    getLogNoteResponseActions: bindActionCreators(getLogNoteResponse, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Homescreen)
+
 const styles = StyleSheet.create({
     text: {
         fontSize: 20

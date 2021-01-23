@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import profile from './profileReducer';
+import logNotes from './logNoteReducer';
 
 const rootReducer = combineReducers({
-  profile
+  profile,
+  logNotes
 });
 export default rootReducer;

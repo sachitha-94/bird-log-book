@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
 import Homescreen from './screens/Homescreen'
 import Addscreen from './screens/AddScreen'
 import MapScreen from './screens/MapScreen'
 import Settings from './screens/Settings'
+import Gallery from './screens/GalleryScreen'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -33,6 +34,16 @@ const BottomTabs = () => {
           tabBarLabel: 'Add Note',
           tabBarIcon: ({ color }) => (
             <AntDesign name="addfile" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Gallery"
+        component={Gallery}
+        options={{
+          tabBarLabel: 'Gallery',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="photo" size={24} color="black" />
           ),
         }}
       />

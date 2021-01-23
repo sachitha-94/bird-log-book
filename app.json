@@ -1,0 +1,12 @@
+{
+    "expo": {
+        "name": "pocket bird",
+        "description": "your app desc",
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "package": "om.s3gen.pocketbird"
+        }
+    }
+}
