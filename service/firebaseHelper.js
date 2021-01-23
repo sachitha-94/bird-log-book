@@ -149,3 +149,15 @@ export const uploadImage = async (uri) => {
     blob.close();
     return downloadUrl;
 }
+
+export const removeLogNote = async (timestamp) => {
+    try {
+        const response = await firebaseDatabase.ref('/logNote').child(timestamp).key;
+        console.log('removeLogNote response====>', response);
+        // response.remove();
+        return response;
+    } catch (error) {
+        console.log('error remove log norte--->>>', error);
+        return error;
+    }
+}
