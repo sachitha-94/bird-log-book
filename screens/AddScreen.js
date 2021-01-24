@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
-import { Picker } from '@react-native-community/picker';
 import * as ImagePicker from 'expo-image-picker';
-import { Input, Icon } from 'react-native-elements';
 import * as Location from 'expo-location';
 import moment from 'moment';
 import * as Permissions from 'expo-permissions';
@@ -11,16 +10,11 @@ import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps'
 import Constants from 'expo-constants';
-// import ImagePicker from 'react-native-image-picker';
-// import RNFetchBlob from 'react-native-fetch-blob'
-// import * as Progress from 'react-native-progress';
-// import ImageResizer from 'react-native-image-resizer';
-// import ImagePicker from 'react-native-image-picker';
-// import uuid from 'react-native-uuid';
+
 import { createDb, saveItem, updateList } from '../service/sqliteHelper';
 import { saveLogNote, uploadImage } from '../service/firebaseHelper';
 import { elevationList, habitatList, sizeList, shapeList } from '../constants/common'
-// import UploadImage from '../components/UploadImage';
+import { getLogNoteResponse } from '../actions/logNoteAction';
 
 const AddLogNote = (props) => {
   // const [birdName, setBirdName] = useState('');
@@ -37,7 +31,7 @@ const AddLogNote = (props) => {
 
   const { register, setValue, handleSubmit, control, reset, errors } = useForm();
 
-  const { profile } = props;
+  const { profile, getLogNoteResponseActions } = props;
 
   const getCurrentLocation = async () => {
     console.log('getCurrentLocation')
@@ -139,51 +133,22 @@ const AddLogNote = (props) => {
     );
   }
 
-  //   const reSizeImage=(uri)=>{
-  //     let newWidth = 40;
-  // let newHeight = 40;
-  // let compressFormat = 'PNG';
-  // let quality = 100;
-  // let rotation = 0;
-  // let outputPath = null;
-  // let imageUri = this.state.selectedPictureUri;
-  // ImageResizer.createResizedImage(
-  //   imageUri,
-  //   newWidth,
-  //   newHeight,
-  //   compressFormat,
-  //   quality,
-  //   rotation,
-  //   outputPath,
-  // )
-  //   .then((response) => {
-  //     // response.uri is the URI of the new image that can now be displayed, uploaded...
-  //     //resized image uri
-  //     let uri = response.uri;
-  //     //generating image name
-  //     let imageName = 'profile' + this.state.userId;
-  //     //to resolve file path issue on different platforms
-  //     let uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-  //     //setting the image name and image uri in the state
-  //     this.setState({
-  //       uploadUri,
-  //       imageName,
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     console.log('image resizing error => ', err);
-  //   });
-  //   }
 
-  const onSubmit = data => {
+  const onSubmit = async (data, e) => {
     console.log(profile);
     const timestamp = Date.now()
-    // const logNoteId = uuid.v1();
-    console.log('logNoteData ==data..>>', data);
-    const logNoteData = { ...data, user: profile.data, location, timestamp, imagePath: uploadedImage }
-    console.log('logNoteData ==logNoteData..>>', logNoteData);
-    const res = saveLogNote(logNoteData);
-    console.log('saveLogNote ==res..>>', res);
+    const logNoteData = {
+      ...data,
+      user: profile.data,
+      location,
+      timestamp,
+      imagePath: uploadedImage
+    }
+    await saveLogNote(logNoteData);
+    await getLogNoteResponseActions();
+    e.target.reset()
+    setImageNormal(null);
+    setUploadedImage('');
   };
 
   const onChange = arg => {
@@ -340,7 +305,12 @@ const mapStateToProps = state => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps)(AddLogNote)
+const mapDispatchToProps = dispatch => ({
+  getLogNoteResponseActions: bindActionCreators(getLogNoteResponse, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddLogNote)
+
 // const heightConst = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({

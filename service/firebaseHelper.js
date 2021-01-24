@@ -16,9 +16,17 @@ export const getAllLogNotes = item => {
     try {
         const logNoteRef = firebaseDatabase.ref('/logNote');
         let list = [];
+        let list1 = [];
+
         logNoteRef.on('value', snapshot => {
             let data = snapshot.val();
-            const list1 = data ? Object.values(data) : [];
+
+            // const list1 = data ? Object.entries(data) : [];
+            Object.keys(data).map((key, i) => {
+                const newObj = { ...data[key], key };
+                list1.push(newObj);
+            })
+            console.log('logNoteRef======>>>.......', list1);
             list = list1.sort((a, b) => {
                 if (a.timestamp < b.timestamp) return 1;
                 if (a.timestamp > b.timestamp) return -1;
@@ -150,11 +158,15 @@ export const uploadImage = async (uri) => {
     return downloadUrl;
 }
 
-export const removeLogNote = async (timestamp) => {
+export const removeLogNote = async (key) => {
     try {
-        const response = await firebaseDatabase.ref('/logNote').child(timestamp).key;
+        const response = await firebaseDatabase.ref(`/logNote/${key}`).remove().then(function () {
+            console.log("Remove succeeded.")
+        })
+            .catch(function (error) {
+                console.log("Remove failed: " + error.message)
+            });
         console.log('removeLogNote response====>', response);
-        // response.remove();
         return response;
     } catch (error) {
         console.log('error remove log norte--->>>', error);

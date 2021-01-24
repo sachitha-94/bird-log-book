@@ -28,7 +28,7 @@ import {
 
 const App = (props) => {
 
-    const { navigation, logNotes, getLogNoteResponseActions } = props;
+    const { navigation, logNotes, getLogNoteResponseActions, profile } = props;
     const [selectedNote, setSelectedNote] = useState(null);
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -56,8 +56,10 @@ const App = (props) => {
         setSelectedNote(null);
         console.log("toggleModalClose-->>>", selectedNote, isModalVisible);
     };
-    const removeButtonOnClik = async (timestamp) => {
-        const res = await removeLogNote(timestamp);
+    const removeButtonOnClik = async (key) => {
+        await removeLogNote(key);
+        await getAllLogNotesAction()
+        toggleModalClose();
         console.log('response delete button on cli--->>>', res);
     }
     const renderModal = () => (
@@ -120,7 +122,7 @@ const App = (props) => {
             <Button
                 color="#f44336"
                 title="Delete"
-                onPress={() => removeButtonOnClik(selectedNote.timestamp)} />
+                onPress={() => removeButtonOnClik(selectedNote.key)} />
         </Modal>
     )
 
@@ -131,7 +133,7 @@ const App = (props) => {
             <FlatList
                 data={logNotes?.data || []}
                 renderItem={({ item }) => {
-                    if (item?.imagePath)
+                    if (profile?.data?.email === item?.user?.email && item?.imagePath)
                         return (
                             <View
                                 style={{
@@ -165,6 +167,7 @@ const App = (props) => {
 
 const mapStateToProps = state => ({
     logNotes: state.logNotes,
+    profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({

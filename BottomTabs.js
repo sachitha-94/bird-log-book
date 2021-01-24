@@ -28,22 +28,22 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
+        name="Gallery"
+        component={Gallery}
+        options={{
+          tabBarLabel: 'Gallery',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="file-photo-o" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Add"
         component={Addscreen}
         options={{
           tabBarLabel: 'Add Note',
           tabBarIcon: ({ color }) => (
             <AntDesign name="addfile" size={24} color="black" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Gallery"
-        component={Gallery}
-        options={{
-          tabBarLabel: 'Gallery',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="photo" size={24} color="black" />
           ),
         }}
       />
