@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Alert, Image, StyleSheet, Text, TextInput, Button, StatusBar, TouchableOpacity, ScrollView, LogBox } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import moment from 'moment';
@@ -16,6 +16,7 @@ import { createDb, saveItem, updateList } from '../service/sqliteHelper';
 import { saveLogNote, uploadImage } from '../service/firebaseHelper';
 import { elevationList, habitatList, sizeList, shapeList } from '../constants/common'
 import { getLogNoteResponse } from '../actions/logNoteAction';
+
 
 const AddLogNote = (props) => {
   // const [birdName, setBirdName] = useState('');
@@ -311,6 +312,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddLogNote)
+
 
 // const heightConst = Dimensions.get('screen').height;
 

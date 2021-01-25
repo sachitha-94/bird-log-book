@@ -22,7 +22,7 @@ const Homescreen = (props) => {
         const interval = setInterval(() => {
             getAllLogNotesAction();
             setCounter(counter + 1);
-        }, 60000);
+        }, 30000);
 
         return () => clearInterval(interval)
 

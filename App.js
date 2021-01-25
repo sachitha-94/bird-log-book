@@ -4,9 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import BottomTabs from './BottomTabs'
 import configureStore from './store/configureStore';
 
-const store = configureStore()
-
+const store = configureStore();
 export default function App() {
+ 
   return (
     <Provider store = { store }>
       <NavigationContainer >

@@ -76,6 +76,7 @@ const Settings = (props) => {
         style={styles.textInput}
         onChangeText={password => setPassword(password)}
         value={password}
+        secureTextEntry
       />
       <TouchableOpacity onPress={handleSignIn}>
         <View style={styles.signupBtn}>
@@ -117,6 +118,7 @@ const Settings = (props) => {
         style={styles.textInput}
         onChangeText={password => setPassword(password)}
         value={password}
+        secureTextEntry
       />
       <TouchableOpacity onPress={handleSignUp}>
         <View style={styles.signupBtn}>
