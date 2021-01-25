@@ -5,6 +5,8 @@ import BottomTabs from './BottomTabs'
 import configureStore from './store/configureStore';
 
 const store = configureStore();
+
+console.disableYellowBox=true;
 export default function App() {
  
   return (
