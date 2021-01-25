@@ -1,33 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import {  View,StyleSheet} from 'react-native';
 import MapView, { Marker } from 'react-native-maps'
-import {updateList} from '../service/sqliteHelper';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const MapScreen=()=>{
-    const [listOfItems, setListOfItems] = useState([]);
+import { getAllLogNotes } from '../service/firebaseHelper';
+import { getLogNoteResponse, } from '../actions/logNoteAction';
+
+const MapScreen = (props) => {
+    const { logNotes, getLogNoteResponseActions } = props;
 
     useEffect(() => {
-        updateListAction();
+        getAllLogNotesAction();
     }, []);
 
-    const updateListAction = () => {
-        updateList(setListOfItems);
+    const getAllLogNotesAction = async () => {
+        const data = await getAllLogNotes();
+        getLogNoteResponseActions(data);
     }
 
     return ( 
             <View style={{ flex: 1 }}>
-                <MapView
-
-                    style={{ flex: 1 }}
-                    region={{
+            <MapView
+                style={{ flex: 1 }}
+                showsUserLocation
+                region={{
                         latitude: 7.8731,
                         longitude: 80.7718,
                         latitudeDelta: 2.5,
                         longitudeDelta: 2.5
                     }} >
-                    {listOfItems && listOfItems.map((item)=>(
+                {logNotes?.data?.map((item) => (
                     <Marker
-                        coordinate={{ latitude: item.latitude, longitude: item.longitude }}
+                        coordinate={item?.location}
 
                     />))}
 
@@ -35,7 +40,16 @@ const MapScreen=()=>{
             </View>)
 }
 
-export default MapScreen;
+
+const mapStateToProps = state => ({
+    logNotes: state.logNotes,
+});
+
+const mapDispatchToProps = dispatch => ({
+    getLogNoteResponseActions: bindActionCreators(getLogNoteResponse, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapScreen)
 
 const styles = StyleSheet.create({
     text: {
