@@ -10,6 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps'
 import Constants from 'expo-constants';
+import * as Progress from 'react-native-progress';
 
 import { createDb, saveItem, updateList } from '../service/sqliteHelper';
 import { saveLogNote, uploadImage } from '../service/firebaseHelper';
@@ -26,12 +27,13 @@ const AddLogNote = (props) => {
   const [image, setImage] = useState(null);
   const [imageNormal, setImageNormal] = useState(null);
   const [uploadedImage, setUploadedImage] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const date = moment().format('MMMM Do YYYY h:mm a ');
 
   const { register, setValue, handleSubmit, control, reset, errors } = useForm();
 
-  const { profile, getLogNoteResponseActions } = props;
+  const { profile, getLogNoteResponseActions, navigation } = props;
 
   const getCurrentLocation = async () => {
     console.log('getCurrentLocation')
@@ -64,8 +66,10 @@ const AddLogNote = (props) => {
       console.log('result====>>> ', result.uri);
       setImageNormal(result.uri);
       setImage(result.base64)
+      setUploading(true);
       const imageUrl = await uploadImage(result.uri);
       setUploadedImage(imageUrl);
+      setUploading(false);
     }
 
     const options = {
@@ -76,18 +80,7 @@ const AddLogNote = (props) => {
       },
     };
 
-    // ImagePicker.showImagePicker(options, (response) => {
-    //   console.log('Response = ', response);
 
-    //   if (response.didCancel) {
-    //     console.log('User cancelled image picker');
-    //   } else if (response.error) {
-    //     console.log('ImagePicker Error: ', response.error);
-    //   } else {
-    //     const uri = response.uri;
-    //     setImage(result.uri);
-    //   }
-    // });
   };
 
 
@@ -146,9 +139,17 @@ const AddLogNote = (props) => {
     }
     await saveLogNote(logNoteData);
     await getLogNoteResponseActions();
-    e.target.reset()
+
+    reset({
+      birdName: '',
+      elevation: null,
+      habitat: null,
+      size: null,
+      shape: null,
+    })
     setImageNormal(null);
     setUploadedImage('');
+    navigation.navigate('Gallery');
   };
 
   const onChange = arg => {
@@ -171,9 +172,9 @@ const AddLogNote = (props) => {
         </TouchableOpacity>
         {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
         {imageNormal && <Image source={{ uri: imageNormal }} style={styles.imageView} />}
-        {/* {uploading && 
-        <Progress.Bar progress={transferred} width={300} /> 
-        } */}
+        {uploading &&
+          <Progress.Bar progress={0.3} width={400} />
+        }
         <Text style={styles.label}>Bird name</Text>
         <Controller
           control={control}
@@ -296,7 +297,7 @@ const AddLogNote = (props) => {
           <Text style={styles.buttonText}>Add new Log</Text>
         </View>
       </TouchableOpacity> */}
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <Button title="Submit" onPress={handleSubmit(onSubmit)} color="#32CD32" disabled={uploading} />
     </View>
   );
 }
