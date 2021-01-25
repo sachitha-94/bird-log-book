@@ -62,6 +62,9 @@ const App = (props) => {
         toggleModalClose();
         console.log('response delete button on cli--->>>', res);
     }
+    const addLogNOteOnClick = () => {
+        navigation.navigate('Add');
+    }
     const renderModal = () => (
         isModalVisible && selectedNote &&
         <Modal
@@ -130,7 +133,7 @@ const App = (props) => {
         <>
             <StatusBar backgroundColor="green" barStyle='default' />
         <SafeAreaView style={styles.container}>
-            <FlatList
+                {logNotes?.data ? <FlatList
                 data={logNotes?.data || []}
                 renderItem={({ item }) => {
                     if (profile?.data?.email === item?.user?.email && item?.imagePath)
@@ -157,7 +160,15 @@ const App = (props) => {
                 //Setting the number of column
                     numColumns={2}
                 keyExtractor={(item, index) => index}
-            />
+                /> :
+                    <Button
+                        color="#006400"
+                        title="Add Log Note"
+                        onPress={() => addLogNOteOnClick()}
+                        style={{ padding: 30 }}
+                    />
+
+                }
         </SafeAreaView>
 
             { isModalVisible && selectedNote && renderModal()}

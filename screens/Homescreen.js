@@ -5,6 +5,7 @@ import MapView from 'react-native-maps'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Card, CardTitle, CardContent, CardAction, CardImage } from 'react-native-material-cards'
+import * as Progress from 'react-native-progress';
 import { getAllLogNotes } from '../service/firebaseHelper';
 import { getLogNoteResponse, } from '../actions/logNoteAction';
 
@@ -64,15 +65,19 @@ const Homescreen = (props) => {
                 {logNotes?.data?.length ? logNotes.data.map((note) => {
                         const relativeTime = moment(Number.parseInt(note.timestamp || '', 10)).fromNow();
                         return (
-                        <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                            <Card>
+                            <View key={note.timestamp} style={{ flex: 1, alignItems: "center", justifyContent: "center", }}>
+                                <Card
+                                    style={{ backgroundColor: '#A9DFBF' }}
+                                >
                                 <CardTitle
-                                    title={note?.user?.email|| note?.user?.name}
+                                        title={note?.user?.name || note?.user?.email || "Fellow user"}
                                     subtitle={relativeTime}
+                                        // style={{ backgroundColor: '#3C8C3F' }}
                                 />
                                 <CardImage
                                     source={{ uri: note.imagePath }}
                                     title={note.birdName}
+                                        style={{ margin: 5 }}
                                 />
                                 <CardContent  >
                                     <Text >Elevation - {note.elevation}</Text>
@@ -113,8 +118,8 @@ const Homescreen = (props) => {
                         </View>)
 
                     }) 
-                    : <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 20, borderColor: "grey", borderWidth: 3, margin: 5 }} >Loading... </Text>
+                    : <View >
+                        <Progress.Bar width={400} indeterminate color={'rgba(30, 130, 76, 1)'} style={{ margin:10, marginTop: 400  }} />
                     </View>
                 }
                 </ScrollView>

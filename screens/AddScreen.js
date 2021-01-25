@@ -173,7 +173,7 @@ const AddLogNote = (props) => {
         {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
         {imageNormal && <Image source={{ uri: imageNormal }} style={styles.imageView} />}
         {uploading &&
-          <Progress.Bar progress={0.3} width={400} />
+          <Progress.Bar width={400} indeterminate color={'rgba(30, 130, 76, 1)'} style={{ margin: 10 }} />
         }
         <Text style={styles.label}>Bird name</Text>
         <Controller
@@ -297,7 +297,7 @@ const AddLogNote = (props) => {
           <Text style={styles.buttonText}>Add new Log</Text>
         </View>
       </TouchableOpacity> */}
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} color="#32CD32" disabled={uploading} />
+      <Button title="Submit" onPress={handleSubmit(onSubmit)} color="#32CD32" disabled={uploading || !uploadedImage} />
     </View>
   );
 }
