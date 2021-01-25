@@ -76,10 +76,7 @@ const App = (props) => {
         // onBackdropPress={() => toggleModalClose()}
         >
             <Card>
-                <CardTitle
-                    title={selectedNote?.user?.email || selectedNote?.user?.name}
-                // subtitle={relativeTime}
-                />
+                
                 <CardImage
                     style={styles.cardImage}
                     source={{ uri: selectedNote?.imagePath }}
